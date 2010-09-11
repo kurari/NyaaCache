@@ -21,9 +21,8 @@ class NyaaCacheDir extends NyaaCache
 
 	function set($key, $value, $expire = 0)
 	{
-		if($expire > 0 && $expire < 60*60*24*30)
-			$expire = time() + $expire;
-		$key = $this->path.'/'.$this->name.'-'.$key;
+		if($expire > 0 && $expire < 60*60*24*30) $expire = time() + $expire;
+		$key = $this->path.'/'.$this->name.'-'.urlencode($key);
 		$value = serialize($value);
 		file_put_contents($key, $value);
 		if( $expire !== 0 )
@@ -32,7 +31,7 @@ class NyaaCacheDir extends NyaaCache
 
 	function get($key)
 	{
-		$key    = $this->path.'/'.$this->name.'-'.$key;
+		$key    = $this->path.'/'.$this->name.'-'.urlencode($key);
 		if(file_exists($key.'.expire')){
 			$expire = file_get_contents($key.'.expire');
 			if($expire > 0 && time() > $expire){
@@ -49,7 +48,7 @@ class NyaaCacheDir extends NyaaCache
 
 	function del($key)
 	{
-		$key    = $this->path.'/'.$this->name.'-'.$key;
+		$key    = $this->path.'/'.$this->name.'-'.urlencode($key);
 		if(file_exists($key)) unlink($key);
 		if(file_exists($key.".expire")) unlink($key.'.expire');
 	}
